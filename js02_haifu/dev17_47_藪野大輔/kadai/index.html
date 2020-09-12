@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>To do リスト</title>
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+</head>
+<body>
+<header>
+<h1><span id="day"></span></h1>
+</header>
+<main>
+    <input type="date" id="key">
+    <textarea id="memo"></textarea>
+    <ul>
+        <li id="save">保存</li>  
+        <li id="Allclear">全削除</li>
+        <li id="clear">一部削除</li>
+    </ul>
+</main>
+
+<table id="list">
+<!-- ここに追加データが挿入される -->
+</table>
+<script>
+// 今日の日付を取得
+document.getElementById("day").innerHTML = getNow();
+
+function getNow() {
+	var now = new Date();
+	var year = now.getFullYear();
+	var mon = now.getMonth()+1; //１を足すこと
+	var day = now.getDate();
+	var hour = now.getHours();
+	var min = now.getMinutes();
+	var sec = now.getSeconds();
+
+	//出力用
+	var s = year + "年" + mon + "月" + day + "日のTo do リスト" ; 
+	return s;
+}
+
+// save
+$("#save").on("click",function(){
+    const key = $("#key").val();
+    const value = $("#memo").val();
+    localStorage.setItem(key,value);
+    const html = '<tr><th>'+key+'</th><td>'+value+'</td></tr>';
+    $("#list").append(html);
+});
+
+//2.clear クリックイベント
+$("#Allclear").on("click",function(){
+    localStorage.clear();
+    $("#list").empty();
+});
+
+//3.ページ読み込み：保存データ取得表示
+for(let i=0; i<localStorage.length; i++){
+    const key   = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    const html = '<tr><th>'+key+'</th><td>'+value+'</td></tr>';
+    $("#list").append(html);
+}
+// 一部削除
+$('#clear').on("click", function(){
+  let table = document.getElementById("list");  //リストの情報を取得
+  let a = table.rows[0];   // 1行目オブジェクト取得
+  let dkey = localStorage.key(0);   //オブジェクトからキー名を取得
+  localStorage.removeItem(dkey);  //上記のキー名を元にローカルストレージのアイテムを削除
+  list.deleteRow(0); //リスト上の行を削除する
+});
+
+</script>
+<footer></footer>
+</body>
+</html>
